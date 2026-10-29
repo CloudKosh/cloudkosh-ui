@@ -36,8 +36,5 @@ jobs:
       - name: Build CSS
         run: npm run build-css
 
-      - name: Publish Built Assets to Tag
-        uses: raven-actions/publish-and-tag@v3
-        with:
-          # This force-pushes your built assets directly into the tag code history
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Publish to NPM
+      - run: npm publish --access public
