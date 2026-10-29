@@ -12,8 +12,6 @@ permissions:
 jobs:
   release-assets:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write # Required to update the Git tag assets
     
     steps:
       - name: Checkout Code
@@ -24,7 +22,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '26'
+          node-version: '24'
           cache: 'npm'
 
       - name: Install Dependencies
