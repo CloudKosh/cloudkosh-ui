@@ -4,6 +4,9 @@
   "description": "",
   "main": "index.js",
   "type": "module",
+  "repository": {
+    "url": "https://github.com/CloudKosh/cloudkosh-ui"
+  },
   "scripts": {
     "test": "node --enable-source-maps ./test.mjs",
     "postversion": "git push --follow-tags",
