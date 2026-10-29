@@ -10,7 +10,7 @@
    },
    "terminal.integrated.defaultProfile.windows": "PowerShell",
     "cSpell.words": [
-        
+        "kosh"
     ],
     "js/ts.preferences.importModuleSpecifierEnding": "js",
     "emmet.showExpandedAbbreviation": "never",
