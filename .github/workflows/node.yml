@@ -36,5 +36,8 @@ jobs:
       - name: Build CSS
         run: npm run build-css
 
+      - name: Pack JS files
+        run: node ./node_modules/@package-verse/esmpack/pack.js --loader-cdn /npm/ dist
+
       - name: Publish to NPM
         run: npm publish --access public
