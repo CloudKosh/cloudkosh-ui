@@ -1,0 +1,42 @@
+{
+    "compilerOptions": {
+        "target": "es2022",
+        "module":"es2022",
+        "rootDir": "./src/",
+        "incremental": true,
+        "sourceMap": true,
+        "declaration": true,
+        "declarationMap": true,
+        "moduleResolution": "bundler",
+        "outDir": "dist",
+        "strict": false,
+        "tsBuildInfoFile": "./dist/.tsbuildinfo",
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "allowSyntheticDefaultImports": true,
+        "useDefineForClassFields": false,
+        "forceConsistentCasingInFileNames": true,
+        "removeComments": true,
+        "importHelpers": true,
+        "skipLibCheck": true,
+        "noUnusedLocals": true,
+        "jsx": "react",
+        "jsxFactory": "XNode.create",
+        "lib": [
+            "es6",
+            "dom",
+            "ES2020",
+            "ES2022",
+            "ES2017.String",
+            "ESNext.Disposable",
+            "ES2021.WeakRef"
+        ]
+    },
+    "include": [
+        "src/**/*"
+    ],
+    "exclude": [
+		"node_modules",
+		"tests"
+    ]
+}

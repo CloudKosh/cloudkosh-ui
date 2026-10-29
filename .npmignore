@@ -1,0 +1,8 @@
+.vscode
+*.yml
+.dependencygraph
+generated-cert-1
+tsconfig.json
+tslint.json
+*.tsbuldinfo
+src/tests/
