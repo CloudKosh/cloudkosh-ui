@@ -10,6 +10,7 @@ import { ModuleInfo } from "../controls/ModuleInfo.js";
 import LoginService from "../../services/user/LoginService.js";
 import { AppLocation } from "../AppLocation.js";
 
+import "./BaseApp.global.css";
 
 (Symbol as any).asyncDispose ??= Symbol("asyncDispose");
 (Symbol as any).dispose ??= Symbol("dispose");
