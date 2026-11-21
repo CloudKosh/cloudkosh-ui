@@ -7,6 +7,7 @@ import { Inject } from "@web-atoms/core/dist/di/Inject.js";
 import EntityService from "../../../core/EntityService.js";
 import { Sql } from "../../../core/Sql.js";
 import Bind from "@web-atoms/core/dist/core/Bind.js";
+import AppCommands from "../../../commands/AppCommands.js";
 
 export default class NamespaceListPage extends ContentPage {
 
@@ -17,6 +18,8 @@ export default class NamespaceListPage extends ContentPage {
     @Inject private entityService: EntityService;
     
     async init() {
+        
+        this.title = "Namespaces";
 
         this.headerRenderer = () => <div>
             <input
@@ -34,7 +37,11 @@ export default class NamespaceListPage extends ContentPage {
                         this.loadItems({ start, search: this.search, cancelToken })
                     )}
                 itemRenderer={(item: INamespace) => <div>
-                    <label text={item.id}/>
+                    <a
+                        data-click-event="route"
+                        text={item.id}
+                        href={AppCommands.buckets.displayRoute({ ns: item.id})}
+                        />
                     <label text={item.name}/>
                     <label text={item.size}/>
                 </div>}
