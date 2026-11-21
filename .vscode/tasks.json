@@ -37,7 +37,7 @@
             "command": "node",
             "args": [
                 "./node_modules/@package-verse/esmpack/serve.js",
-                "https://test.cloudkosh.com"
+                "https://localhost"
             ],
             "problemMatcher": []
         }
