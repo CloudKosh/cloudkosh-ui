@@ -1,0 +1,12 @@
+[data-load-more=load-more] {
+    margin: 10px;
+    padding: 10px;
+    & > span {
+        background-color: lightgray;
+        border-radius: 10px;
+        padding: 3px;
+        padding-left: 10px;
+        padding-right: 10px;
+        border: solid 1px gray;
+    }
+}
