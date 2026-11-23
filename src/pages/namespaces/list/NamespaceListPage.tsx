@@ -8,6 +8,7 @@ import EntityService from "../../../core/EntityService.js";
 import { Sql } from "../../../core/Sql.js";
 import Bind from "@web-atoms/core/dist/core/Bind.js";
 import AppCommands from "../../../commands/AppCommands.js";
+import { AddIconTextButton } from "../../../core/controls/buttons/IconButton.js";
 
 export default class NamespaceListPage extends ContentPage {
 
@@ -47,6 +48,10 @@ export default class NamespaceListPage extends ContentPage {
                 </div>}
                 />
         </div>;
+
+        this.footerRenderer = () => <footer>
+            <AddIconTextButton />
+        </footer>;
     }
 
     loadItems({

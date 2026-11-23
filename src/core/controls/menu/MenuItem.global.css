@@ -1,0 +1,10 @@
+[data-menu-item=menu-item] {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    grid-template-rows: 1fr auto;
+    justify-items: start;
+    & > a {
+        grid-column: 1;
+        grid-row: 1;
+    }
+}

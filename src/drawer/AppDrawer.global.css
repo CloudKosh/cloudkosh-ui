@@ -1,0 +1,23 @@
+drawer-menu {
+    width: 300px;
+
+    background-color: var(--accent-color);
+
+    display: grid;
+    grid-template-rows: auto 1fr;
+
+    & > .header, & > header {
+        grid-row: 1;
+        padding: 10px;
+        font-size: large;
+        color: white;
+    }
+    & > .menus, & > section {
+        grid-row: 2;
+        background-color: canvas;
+        padding: var(--spacing);
+        margin: var(--spacing);
+        border-radius: 10px;
+        overflow: auto;
+    }
+}

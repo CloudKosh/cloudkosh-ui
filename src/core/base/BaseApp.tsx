@@ -11,9 +11,13 @@ import LoginService from "../../services/user/LoginService.js";
 import { AppLocation } from "../AppLocation.js";
 
 import "./BaseApp.global.css";
+import { App } from "@web-atoms/core/dist/App.js";
 
 (Symbol as any).asyncDispose ??= Symbol("asyncDispose");
 (Symbol as any).dispose ??= Symbol("dispose");
+
+App.installStyleSheet("https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.3.1/css/all.min.css");
+App.installStyleSheet("https://cdn.jsdelivr.net/npm/@web-atoms/data-styles@1.1.3/data-styles.min.css");
 
 export default abstract class BaseApp extends MobileDesktopApp {
 
