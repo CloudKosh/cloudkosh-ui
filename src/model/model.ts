@@ -9,6 +9,8 @@ export const modelEntitySchemas = {};
 export interface IAccessToken extends IClrEntity {
 	readonly tokenID?: number;
 	userID?: number;
+	namespaceID?: number | null;
+	bucketID?: number | null;
 	secretHash?: any;
 	title?: string | null;
 	description?: string | null;
@@ -17,6 +19,8 @@ export interface IAccessToken extends IClrEntity {
 	active?: boolean;
 	displaySecret?: Object;
 	user?: IUser;
+	namespace?: INamespace;
+	bucket?: IBucket;
 }
 
 export const AccessToken: IModel<IAccessToken,any,any> = new Model<IAccessToken>(
@@ -38,6 +42,16 @@ export const AccessToken: IModel<IAccessToken,any,any> = new Model<IAccessToken>
 "properties": [
 {
 "name": "userID",
+"type": "number",
+"dataType": "BigInt"
+},
+{
+"name": "namespaceID",
+"type": "number",
+"dataType": "BigInt"
+},
+{
+"name": "bucketID",
 "type": "number",
 "dataType": "BigInt"
 },
@@ -103,6 +117,26 @@ export const AccessToken: IModel<IAccessToken,any,any> = new Model<IAccessToken>
 }
 ],
 "relatedName": "User"
+},
+{
+"name": "namespace",
+"fkMap": [
+{
+"fk": "namespaceID",
+"relatedKey": "id"
+}
+],
+"relatedName": "Namespace"
+},
+{
+"name": "bucket",
+"fkMap": [
+{
+"fk": "bucketID",
+"relatedKey": "bucketID"
+}
+],
+"relatedName": "Bucket"
 }
 ]
 }
@@ -165,6 +199,7 @@ export interface IBucket extends IClrEntity {
 	dateCreated?: DateTime;
 	size?: number;
 	namespace?: INamespace;
+	accessTokens?: ICollection<IAccessToken>;
 	bucketFiles?: ICollection<IBucketFile>;
 }
 
@@ -239,6 +274,12 @@ export const Bucket: IModel<IBucket,any,any> = new Model<IBucket>(
 }
 ],
 "relatedName": "Namespace"
+},
+{
+"name": "accessTokens",
+"isCollection": true,
+"isInverse": true,
+"relatedName": "AccessToken"
 },
 {
 "name": "bucketFiles",
@@ -719,7 +760,9 @@ export interface INamespace extends IClrEntity {
 	name?: string;
 	description?: string | null;
 	dateCreated?: DateTime;
+	isReady?: boolean;
 	size?: number;
+	accessTokens?: ICollection<IAccessToken>;
 	buckets?: ICollection<IBucket>;
 	contents?: ICollection<INamespaceContent>;
 	storages?: ICollection<INamespaceStorage>;
@@ -731,7 +774,7 @@ export const Namespace: IModel<INamespace,any,any> = new Model<INamespace>(
 [
 "id"
 ],
-{ name: "",dateCreated: new DefaultFactory(() => new DateTime()),size: 0 },
+{ name: "",dateCreated: new DefaultFactory(() => new DateTime()),isReady: false,size: 0 },
 {
 "name": "namespaces",
 "keys": [
@@ -772,6 +815,15 @@ export const Namespace: IModel<INamespace,any,any> = new Model<INamespace>(
 ]
 },
 {
+"name": "isReady",
+"type": "boolean",
+"dataType": "Boolean",
+"default": [
+"isReady",
+"false"
+]
+},
+{
 "name": "size",
 "type": "number",
 "dataType": "BigInt",
@@ -782,6 +834,12 @@ export const Namespace: IModel<INamespace,any,any> = new Model<INamespace>(
 }
 ],
 "relations": [
+{
+"name": "accessTokens",
+"isCollection": true,
+"isInverse": true,
+"relatedName": "AccessToken"
+},
 {
 "name": "buckets",
 "isCollection": true,
@@ -920,22 +978,34 @@ export interface INamespaceStorage extends IClrEntity {
 	name?: string;
 	readPriority?: number;
 	writePriority?: number;
-	type?: string;
+	type?: "s3" | "disk";
 	bucket?: string;
 	endpoint?: string | null;
 	region?: string | null;
-	encryptedAccessKeyID?: string;
-	encryptedKeySecret?: string;
+	accessKeyID?: string | null;
+	encryptedSecretAccessKey?: string | null;
+	secretAccessKey?: string;
 	namespace?: INamespace;
 	storageContents?: ICollection<IStorageContent>;
 }
+
+export const NamespaceStorageTypeArray = [
+{
+"label": "s3",
+"value": "s3"
+},
+{
+"label": "disk",
+"value": "disk"
+}
+];
 
 export const NamespaceStorage: IModel<INamespaceStorage,any,any> = new Model<INamespaceStorage>(
 "NamespaceStorage",
 [
 "storageID"
 ],
-{ name: "",readPriority: 0,writePriority: 0,type: "",bucket: "",encryptedAccessKeyID: "",encryptedKeySecret: "" },
+{ name: "",readPriority: 0,writePriority: 0,type: "s3",bucket: "" },
 {
 "name": "namespace_storages",
 "keys": [
@@ -987,7 +1057,7 @@ export const NamespaceStorage: IModel<INamespaceStorage,any,any> = new Model<INa
 "length": 100,
 "default": [
 "type",
-"\"\""
+"\"s3\""
 ]
 },
 {
@@ -1021,22 +1091,22 @@ export const NamespaceStorage: IModel<INamespaceStorage,any,any> = new Model<INa
 ]
 },
 {
-"name": "encryptedAccessKeyID",
+"name": "accessKeyID",
 "type": "string",
 "dataType": "Char",
 "length": 400,
 "default": [
-"encryptedAccessKeyID",
+"accessKeyID",
 "\"\""
 ]
 },
 {
-"name": "encryptedKeySecret",
+"name": "encryptedSecretAccessKey",
 "type": "string",
 "dataType": "Char",
 "length": 400,
 "default": [
-"encryptedKeySecret",
+"encryptedSecretAccessKey",
 "\"\""
 ]
 }

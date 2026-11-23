@@ -9,6 +9,9 @@ import { Sql } from "../../../core/Sql.js";
 import Bind from "@web-atoms/core/dist/core/Bind.js";
 import AppCommands from "../../../commands/AppCommands.js";
 import { AddIconTextButton } from "../../../core/controls/buttons/IconButton.js";
+import Action from "@web-atoms/core/dist/view-model/Action.js";
+import PageNavigator from "@web-atoms/web-controls/dist/PageNavigator.js";
+import NamespaceEditorPage from "../editor/NamespaceEditorPage.js";
 
 export default class NamespaceListPage extends ContentPage {
 
@@ -44,13 +47,16 @@ export default class NamespaceListPage extends ContentPage {
                         href={AppCommands.buckets.displayRoute({ ns: item.id})}
                         />
                     <label text={item.name}/>
+                    <label
+                        style-color={item.isReady ? "" : "red"}
+                        text={item.isReady ? "Ready" : "Not Ready"}/>
                     <label text={item.size}/>
                 </div>}
                 />
         </div>;
 
         this.footerRenderer = () => <footer>
-            <AddIconTextButton />
+            <AddIconTextButton data-click-event="add-item" />
         </footer>;
     }
 
@@ -67,4 +73,9 @@ export default class NamespaceListPage extends ContentPage {
         return q.toPage({ start, size: 25, cancelToken});
     }
 
+    @Action({ onEvent: "add-item"})
+    async addItem() {
+        const result = await PageNavigator.pushPageForResult(NamespaceEditorPage, {});
+        this.items.insert(0, result);
+    }
 }
