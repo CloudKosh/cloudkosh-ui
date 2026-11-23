@@ -11,7 +11,7 @@ export interface IAccessToken extends IClrEntity {
 	userID?: number;
 	namespaceID?: number | null;
 	bucketID?: number | null;
-	secretHash?: any;
+	secretHash?: string;
 	title?: string | null;
 	description?: string | null;
 	dateCreated?: DateTime;
@@ -201,6 +201,7 @@ export interface IBucket extends IClrEntity {
 	namespace?: INamespace;
 	accessTokens?: ICollection<IAccessToken>;
 	bucketFiles?: ICollection<IBucketFile>;
+	importTasks?: ICollection<IImportTask>;
 }
 
 export const Bucket: IModel<IBucket,any,any> = new Model<IBucket>(
@@ -286,6 +287,12 @@ export const Bucket: IModel<IBucket,any,any> = new Model<IBucket>(
 "isCollection": true,
 "isInverse": true,
 "relatedName": "BucketFile"
+},
+{
+"name": "importTasks",
+"isCollection": true,
+"isInverse": true,
+"relatedName": "ImportTask"
 }
 ]
 }
@@ -755,6 +762,194 @@ export const LoginSession: IModel<ILoginSession,any,any> = new Model<ILoginSessi
 );
 modelEntitySchemas["LoginSession"] = LoginSession;
 
+export interface IImportTask extends IClrEntity {
+	readonly taskID?: number;
+	bucketID?: number | null;
+	namespaceID?: number | null;
+	status?: "started" | "failed" | "completed";
+	nextToken?: string | null;
+	sourceType?: "s3" | "azure-blob" | "cloud-kosh-ns" | "cloud-kosh-bucket";
+	encryptedConnectionString?: string | null;
+	region?: string | null;
+	endpoint?: string | null;
+	accessKeyID?: string | null;
+	encryptedSecretAccessKey?: string | null;
+	container?: string | null;
+	connectionString?: string;
+	secretAccessKey?: string;
+	bucket?: IBucket;
+	namespace?: INamespace;
+}
+
+export const ImportTaskStatusArray = [
+{
+"label": "started",
+"value": "started"
+},
+{
+"label": "failed",
+"value": "failed"
+},
+{
+"label": "completed",
+"value": "completed"
+}
+];
+export const ImportTaskSourceTypeArray = [
+{
+"label": "s3",
+"value": "s3"
+},
+{
+"label": "azure-blob",
+"value": "azure-blob"
+},
+{
+"label": "cloud-kosh-ns",
+"value": "cloud-kosh-ns"
+},
+{
+"label": "cloud-kosh-bucket",
+"value": "cloud-kosh-bucket"
+}
+];
+
+export const ImportTask: IModel<IImportTask,any,any> = new Model<IImportTask>(
+"ImportTask",
+[
+"taskID"
+],
+{ status: "started",sourceType: "s3" },
+{
+"name": "import_tasks",
+"keys": [
+{
+"name": "taskID",
+"type": "number",
+"generated": "identity",
+"dataType": "BigInt"
+}
+],
+"properties": [
+{
+"name": "bucketID",
+"type": "number",
+"dataType": "BigInt"
+},
+{
+"name": "namespaceID",
+"type": "number",
+"dataType": "BigInt"
+},
+{
+"name": "status",
+"type": "string",
+"dataType": "Char",
+"default": [
+"status",
+"\"started\""
+]
+},
+{
+"name": "nextToken",
+"type": "string",
+"dataType": "Char",
+"default": [
+"nextToken",
+"\"\""
+]
+},
+{
+"name": "sourceType",
+"type": "string",
+"dataType": "Char",
+"length": 20,
+"default": [
+"sourceType",
+"\"s3\""
+]
+},
+{
+"name": "encryptedConnectionString",
+"type": "string",
+"dataType": "Char",
+"default": [
+"encryptedConnectionString",
+"\"\""
+]
+},
+{
+"name": "region",
+"type": "string",
+"dataType": "Char",
+"default": [
+"region",
+"\"\""
+]
+},
+{
+"name": "endpoint",
+"type": "string",
+"dataType": "Char",
+"default": [
+"endpoint",
+"\"\""
+]
+},
+{
+"name": "accessKeyID",
+"type": "string",
+"dataType": "Char",
+"default": [
+"accessKeyID",
+"\"\""
+]
+},
+{
+"name": "encryptedSecretAccessKey",
+"type": "string",
+"dataType": "Char",
+"default": [
+"encryptedSecretAccessKey",
+"\"\""
+]
+},
+{
+"name": "container",
+"type": "string",
+"dataType": "Char",
+"default": [
+"container",
+"\"\""
+]
+}
+],
+"relations": [
+{
+"name": "bucket",
+"fkMap": [
+{
+"fk": "bucketID",
+"relatedKey": "bucketID"
+}
+],
+"relatedName": "Bucket"
+},
+{
+"name": "namespace",
+"fkMap": [
+{
+"fk": "namespaceID",
+"relatedKey": "id"
+}
+],
+"relatedName": "Namespace"
+}
+]
+}
+);
+modelEntitySchemas["ImportTask"] = ImportTask;
+
 export interface INamespace extends IClrEntity {
 	readonly id?: number;
 	name?: string;
@@ -765,6 +960,7 @@ export interface INamespace extends IClrEntity {
 	accessTokens?: ICollection<IAccessToken>;
 	buckets?: ICollection<IBucket>;
 	contents?: ICollection<INamespaceContent>;
+	importTasks?: ICollection<IImportTask>;
 	storages?: ICollection<INamespaceStorage>;
 	namespaceUsers?: ICollection<INamespaceUser>;
 }
@@ -853,6 +1049,12 @@ export const Namespace: IModel<INamespace,any,any> = new Model<INamespace>(
 "relatedName": "NamespaceContent"
 },
 {
+"name": "importTasks",
+"isCollection": true,
+"isInverse": true,
+"relatedName": "ImportTask"
+},
+{
 "name": "storages",
 "isCollection": true,
 "isInverse": true,
@@ -872,7 +1074,7 @@ modelEntitySchemas["Namespace"] = Namespace;
 export interface INamespaceContent extends IClrEntity {
 	readonly contentID?: number;
 	namespaceID?: number;
-	sha256?: any;
+	sha256?: string;
 	size?: number;
 	stale?: boolean;
 	keyPath?: string;

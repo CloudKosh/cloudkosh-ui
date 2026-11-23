@@ -23,15 +23,13 @@ export default class BucketListPage extends ContentPage<{ ns }> {
         this.ns = await this.loadNamespace();
 
         this.headerRenderer = () => <div>
-            <div>
+            <header>
                 <span>{this.ns.name} ({this.ns.id})</span>
-            </div>
-            <div>
                 <input
                     type="search"
                     placeholder="Search"
                     value={Bind.twoWaysImmediate(() => this.search)}/>
-            </div>
+            </header>
         </div>;
 
         this.renderer = <div>
