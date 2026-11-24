@@ -7,6 +7,9 @@ import { Inject } from "@web-atoms/core/dist/di/Inject.js";
 import EntityService from "../../../core/EntityService.js";
 import { Sql } from "../../../core/Sql.js";
 import Bind from "@web-atoms/core/dist/core/Bind.js";
+import { AddIconTextButton } from "../../../core/controls/buttons/IconButton.js";
+import PageNavigator from "@web-atoms/web-controls/dist/PageNavigator.js";
+import AddNewBucketPage from "../edit/AddNewBucketPage.js";
 
 export default class BucketListPage extends ContentPage<{ ns }> {
 
@@ -45,6 +48,16 @@ export default class BucketListPage extends ContentPage<{ ns }> {
                     <label text={item.name}/>
                     <label text={item.size}/>
                 </div>}
+                />
+        </div>;
+
+        this.footerRenderer = () => <div>
+            <AddIconTextButton
+                text="Add New Bucket"
+                event-click={async () => {
+                    const model = await PageNavigator.pushPageForResult(AddNewBucketPage, Bucket.create({ namespaceID: this.parameters.ns }));
+                    this.items.insert(0, model);
+                }}
                 />
         </div>;
     }
