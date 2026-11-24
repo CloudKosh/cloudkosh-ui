@@ -26,6 +26,15 @@ export default class AppDrawer extends Drawer {
                         commandLink={AppCommands.namespaces.displayRoute({})}
                         />
                 </ExpanderMenu>
+                <ExpanderMenu isExpanded={true}>
+                    <MenuItem
+                        label="Imports"
+                        />
+                    <MenuItem
+                        label="List"
+                        commandLink={AppCommands.imports.displayRoute({})}
+                        />
+                </ExpanderMenu>
             </section>
         </div>;
         

@@ -19,6 +19,8 @@ export default class BucketDropDown extends DropDown {
 
     namespaceID: any;
 
+    selectFirst = false;
+
     constructor(app, e) {
         super(app, e);
         this.namespaceID = null;
@@ -51,7 +53,11 @@ export default class BucketDropDown extends DropDown {
                 .firstOrDefault();
         }
         this.items = [item];
-        this.selectedItem = item;
+        if(this.selectFirst) {
+            this.selectedItem = item;
+        } else {
+            this.selectedItem = null;
+        }
     }
 
     async searchBuckets(search: string, value: any, cancelToken: CancelToken) {

@@ -32,6 +32,7 @@ export default class ImportPage extends PopupWindowPage {
                 </FormField>
                 <FormField label="Bucket (Leave Empty if you want to import entire namespace)">
                     <BucketDropDown
+                        namespaceID={Bind.oneWay(() => this.model.destNamespaceID)}
                         value={Bind.twoWaysImmediate(() => this.model.destBucketID)}
                         />
                 </FormField>

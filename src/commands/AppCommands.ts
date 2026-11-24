@@ -13,6 +13,10 @@ export default class AppCommands extends Commands {
         openPage: () => import("../pages/buckets/list/BucketList.js")
     });
 
+    static imports = Command.create({
+        route: "/imports",
+        openPage: () => import("../pages/imports/list/ImportListPage.js")
+    })
 
     static namespaces = Command.create({
         route: "/namespaces",
