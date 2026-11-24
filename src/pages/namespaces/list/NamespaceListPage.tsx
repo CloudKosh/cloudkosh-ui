@@ -1,5 +1,5 @@
 import XNode from "@web-atoms/core/dist/core/XNode.js";
-import { ContentPage } from "@web-atoms/web-controls/dist/mobile-app/MobileApp.js";
+import MasterDetailPage from "@web-atoms/web-controls/dist/mobile-app/MasterDetailPage.js";
 import AtomRepeater from "@web-atoms/web-controls/dist/basic/AtomRepeater.js";
 import { INamespace, Namespace } from "../../../model/model.js";
 import InfiniteRepeater from "../../../core/controls/repeater/InfiniteRepeater.js";
@@ -10,17 +10,18 @@ import Bind from "@web-atoms/core/dist/core/Bind.js";
 import AppCommands from "../../../commands/AppCommands.js";
 import { AddIconTextButton } from "../../../core/controls/buttons/IconButton.js";
 import Action from "@web-atoms/core/dist/view-model/Action.js";
-import PageNavigator from "@web-atoms/web-controls/dist/PageNavigator.js";
 import NamespaceEditorPage from "../editor/NamespaceEditorPage.js";
 
-export default class NamespaceListPage extends ContentPage {
+export default class NamespaceListPage extends MasterDetailPage {
 
     items: INamespace[] = [];
 
     search = "";
 
     @Inject private entityService: EntityService;
-    
+
+    repeater: AtomRepeater;
+
     async init() {
         
         this.title = "Namespaces";
@@ -33,9 +34,13 @@ export default class NamespaceListPage extends ContentPage {
         </div>;
 
         this.renderer = <div>
+            <div>
             <AtomRepeater
+                presenter={Bind.presenter((c) => this.repeater = c)}
                 items={this.items}
                 data-layout="data-grid"
+                selectOnClick={true}
+                data-selection-updated-event="selection-updated"
                 { ... InfiniteRepeater.pagedItems((start) =>
                     (c, e, cancelToken) =>
                         this.loadItems({ start, search: this.search, cancelToken })
@@ -53,6 +58,7 @@ export default class NamespaceListPage extends ContentPage {
                     <label text={item.size}/>
                 </div>}
                 />
+            </div>
         </div>;
 
         this.footerRenderer = () => <footer>
@@ -75,7 +81,18 @@ export default class NamespaceListPage extends ContentPage {
 
     @Action({ onEvent: "add-item"})
     async addItem() {
-        const result = await PageNavigator.pushPageForResult(NamespaceEditorPage, {});
+        const result = Namespace.create({});
         this.items.insert(0, result);
+        this.repeater.selectedItem = result;
+        this.openDetail(NamespaceEditorPage, result);
+    }
+
+    @Action({ onEvent: "selection-updated", defer:10})
+    async changeSettings() {
+        const { selectedItem } = this.repeater;
+        if (!selectedItem) {
+            return;
+        }
+        this.openDetail(NamespaceEditorPage, selectedItem);
     }
 }

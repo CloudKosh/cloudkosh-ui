@@ -15,8 +15,8 @@ import EntityService from "../../../core/EntityService.js";
 export default class ImportPage extends PopupWindowPage {
 
     model = ImportTask.create({
-        namespaceID: null,
-        bucketID: null
+        destBucketID: null,
+        destNamespaceID: null
     });
 
     @Inject
@@ -27,12 +27,12 @@ export default class ImportPage extends PopupWindowPage {
             <AppForm>
                 <FormField label="Namespace">
                     <NamespaceDropDown
-                        value={Bind.twoWaysImmediate(() => this.model.namespaceID)}
+                        value={Bind.twoWaysImmediate(() => this.model.destNamespaceID)}
                         />
                 </FormField>
-                <FormField label="Bucket">
+                <FormField label="Bucket (Leave Empty if you want to import entire namespace)">
                     <BucketDropDown
-                        value={Bind.twoWaysImmediate(() => this.model.bucketID)}
+                        value={Bind.twoWaysImmediate(() => this.model.destBucketID)}
                         />
                 </FormField>
                 <FormField label="Source">

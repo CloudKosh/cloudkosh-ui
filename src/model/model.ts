@@ -764,21 +764,27 @@ modelEntitySchemas["LoginSession"] = LoginSession;
 
 export interface IImportTask extends IClrEntity {
 	readonly taskID?: number;
-	bucketID?: number | null;
-	namespaceID?: number | null;
+	destBucketID?: number | null;
+	destNamespaceID?: number | null;
 	status?: "started" | "failed" | "completed";
 	nextToken?: string | null;
 	sourceType?: "s3" | "azure-blob" | "cloud-kosh-ns" | "cloud-kosh-bucket";
+	root?: string | null;
 	encryptedConnectionString?: string | null;
+	bucket?: string | null;
 	region?: string | null;
 	endpoint?: string | null;
 	accessKeyID?: string | null;
 	encryptedSecretAccessKey?: string | null;
 	container?: string | null;
+	objectsImported?: number;
+	sizeImported?: number;
+	dateCreated?: DateTime;
+	dateUpdated?: DateTime;
 	connectionString?: string;
 	secretAccessKey?: string;
-	bucket?: IBucket;
-	namespace?: INamespace;
+	destBucket?: IBucket;
+	destNamespace?: INamespace;
 }
 
 export const ImportTaskStatusArray = [
@@ -819,7 +825,7 @@ export const ImportTask: IModel<IImportTask,any,any> = new Model<IImportTask>(
 [
 "taskID"
 ],
-{ status: "started",sourceType: "s3" },
+{ status: "started",sourceType: "s3",objectsImported: 0,sizeImported: 0,dateCreated: new DefaultFactory(() => new DateTime()),dateUpdated: new DefaultFactory(() => new DateTime()) },
 {
 "name": "import_tasks",
 "keys": [
@@ -832,12 +838,12 @@ export const ImportTask: IModel<IImportTask,any,any> = new Model<IImportTask>(
 ],
 "properties": [
 {
-"name": "bucketID",
+"name": "destBucketID",
 "type": "number",
 "dataType": "BigInt"
 },
 {
-"name": "namespaceID",
+"name": "destNamespaceID",
 "type": "number",
 "dataType": "BigInt"
 },
@@ -870,11 +876,29 @@ export const ImportTask: IModel<IImportTask,any,any> = new Model<IImportTask>(
 ]
 },
 {
+"name": "root",
+"type": "string",
+"dataType": "Char",
+"default": [
+"root",
+"\"\""
+]
+},
+{
 "name": "encryptedConnectionString",
 "type": "string",
 "dataType": "Char",
 "default": [
 "encryptedConnectionString",
+"\"\""
+]
+},
+{
+"name": "bucket",
+"type": "string",
+"dataType": "Char",
+"default": [
+"bucket",
 "\"\""
 ]
 },
@@ -922,24 +946,60 @@ export const ImportTask: IModel<IImportTask,any,any> = new Model<IImportTask>(
 "container",
 "\"\""
 ]
+},
+{
+"name": "objectsImported",
+"type": "number",
+"dataType": "BigInt",
+"default": [
+"objectsImported",
+"0"
+]
+},
+{
+"name": "sizeImported",
+"type": "number",
+"dataType": "BigInt",
+"default": [
+"sizeImported",
+"0"
+]
+},
+{
+"name": "dateCreated",
+"type": "DateTime",
+"dataType": "DateTime",
+"default": [
+"dateCreated",
+"new DefaultFactory(() => new DateTime())"
+]
+},
+{
+"name": "dateUpdated",
+"type": "DateTime",
+"dataType": "DateTime",
+"default": [
+"dateUpdated",
+"new DefaultFactory(() => new DateTime())"
+]
 }
 ],
 "relations": [
 {
-"name": "bucket",
+"name": "destBucket",
 "fkMap": [
 {
-"fk": "bucketID",
+"fk": "destBucketID",
 "relatedKey": "bucketID"
 }
 ],
 "relatedName": "Bucket"
 },
 {
-"name": "namespace",
+"name": "destNamespace",
 "fkMap": [
 {
-"fk": "namespaceID",
+"fk": "destNamespaceID",
 "relatedKey": "id"
 }
 ],
@@ -1182,6 +1242,7 @@ export interface INamespaceStorage extends IClrEntity {
 	writePriority?: number;
 	type?: "s3" | "disk";
 	bucket?: string;
+	root?: string | null;
 	endpoint?: string | null;
 	region?: string | null;
 	accessKeyID?: string | null;
@@ -1269,6 +1330,16 @@ export const NamespaceStorage: IModel<INamespaceStorage,any,any> = new Model<INa
 "length": 200,
 "default": [
 "bucket",
+"\"\""
+]
+},
+{
+"name": "root",
+"type": "string",
+"dataType": "Char",
+"length": 200,
+"default": [
+"root",
 "\"\""
 ]
 },

@@ -1,0 +1,5 @@
+[data-collection-editor-ex] {
+    &[data-collection-editor-ex][data-collection-editor-ex][data-collection-editor-ex] {
+        overflow: visible;
+    }
+}

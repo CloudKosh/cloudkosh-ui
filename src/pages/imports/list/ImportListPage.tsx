@@ -37,8 +37,8 @@ export default class ImportListPage extends ContentPage {
                         })
                 )}
                 itemRenderer={(item: IImportTask) => <div>
-                    <label text={item.namespace?.name ?? item.bucket.namespace?.name}/>
-                    <label text={item.bucket?.name}/>
+                    <label text={item.destNamespace?.name ?? item.destBucket.namespace?.name}/>
+                    <label text={item.destBucket?.name}/>
                     <label text={item.status}/>
                 </div>}
                 />
@@ -58,12 +58,12 @@ export default class ImportListPage extends ContentPage {
             search = search + "%";
             q = q.where({ search }, (p) =>
                 (x) =>
-                    Sql.text.iLike(x.namespace.name, p.search)
-                    || Sql.text.iLike(x.bucket.name, p.search)
+                    Sql.text.iLike(x.destNamespace.name, p.search)
+                    || Sql.text.iLike(x.destBucket.name, p.search)
             )
         }
         return q
-            .include((x) => [x.namespace, x.bucket.namespace])
+            .include((x) => [x.destNamespace, x.destBucket.namespace])
             .toPage({
                 start,
                 size: 50,
