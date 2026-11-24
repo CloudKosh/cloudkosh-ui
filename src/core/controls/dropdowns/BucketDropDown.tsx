@@ -62,6 +62,10 @@ export default class BucketDropDown extends DropDown {
 
     async searchBuckets(search: string, value: any, cancelToken: CancelToken) {
         let q = this.entityService.query(Bucket);
+        const { namespaceID } = this;
+        if(namespaceID) {
+            q = q.where({ namespaceID }, (p) => (x) => x.namespaceID === p.namespaceID);
+        }
         if(search) {
             search = search + "%";
             q = q.where({ search, value },
@@ -70,12 +74,18 @@ export default class BucketDropDown extends DropDown {
                         Sql.text.iLike(x.name, p.search)
                         || x.bucketID === p.value
             );
-        } else {
-            q = q.where({ value },
-                (p) =>
-                    (x) =>
-                        x.bucketID === p.value
-            );
+        } else if(value) {
+            const items1 = await q.orderByDescending({ value },  (p) => (x) => x.bucketID === p.value )
+                .thenBy((x) => x.name)
+                .toPage({
+                    size: 20,
+                    more: false,
+                    cacheSeconds,
+                    cacheVersion,
+                    cancelToken
+                });
+
+            return items1.items;
         }
 
         const items = await q.orderByDescending((x) => x.dateCreated)
