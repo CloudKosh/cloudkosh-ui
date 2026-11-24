@@ -99,7 +99,7 @@ export default class NamespaceEditorPage extends ContentPage<INamespace> {
 
     @Action({ onEvent: "save-model", close: true })
     async saveModel() {
-        await this.entityService.save(this.model);
+        await this.entityService.save(this.model, (c) => c.include((x) => x.storages));
         return this.model;
     }
 }

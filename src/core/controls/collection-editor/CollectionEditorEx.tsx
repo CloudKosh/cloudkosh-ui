@@ -134,7 +134,7 @@ export default class CollectionEditorEx<T = any, TR = any> extends AtomControl {
                             if(!await this.addNewItemInList(newItem)) {
                                 return;
                             }
-                            this.repeater.footer = this.relation.relatedModel.create({ ... this.addItemDefaults ?? {}});
+                            this.repeater.footer = "show-button";
                         };
 
                         na["data-margin"] = "default";

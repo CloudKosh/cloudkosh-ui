@@ -76,7 +76,9 @@ export default class NamespaceListPage extends MasterDetailPage {
             search = search + "%";
             q = q.where({ search}, (p) => (x) => Sql.text.like(x.name, p.search) );
         }
-        return q.toPage({ start, size: 25, cancelToken});
+        return q
+            .include((x) => x.storages)
+            .toPage({ start, size: 25, cancelToken});
     }
 
     @Action({ onEvent: "add-item"})
