@@ -6,3 +6,11 @@ html, body {
     margin:0;
 }
 
+flex-row {
+    display: inline-flex;
+    flex-direction: row;
+    align-items: row;
+    padding: 5px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+}

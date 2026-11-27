@@ -9,12 +9,16 @@ import { Sql } from "../../../core/Sql.js";
 import Bind from "@web-atoms/core/dist/core/Bind.js";
 import { AddIconTextButton } from "../../../core/controls/buttons/IconButton.js";
 import Action from "@web-atoms/core/dist/view-model/Action.js";
+import PageNavigator from "@web-atoms/web-controls/dist/PageNavigator.js";
+import AccessTokenEditorPage from "./AccessTokenEditorPage.js";
 
 export default class AccessTokenListPage extends ContentPage {
 
     items: IAccessToken[] = [];
 
     search = "";
+
+    version = 1;
 
     @Inject private entityService: EntityService;
     
@@ -35,10 +39,16 @@ export default class AccessTokenListPage extends ContentPage {
                 data-layout="data-grid"
                 { ... InfiniteRepeater.pagedItems((start) =>
                     (c, e, cancelToken) =>
-                        this.loadItems({ start, search: this.search, cancelToken })
+                        this.loadItems({
+                            start,
+                            search: this.search,
+                            cancelToken,
+                            _v: this.version
+                        })
                     )}
                 itemRenderer={(item: IAccessToken) => <div>
                     <label text={item.tokenID}/>
+                    <label text={item.title}/>
                     <label text={item.description}/>
                     <label text={item.dateCreated}/>
                     <label text={item.lastUsed}/>
@@ -57,7 +67,8 @@ export default class AccessTokenListPage extends ContentPage {
     loadItems({
         start,
         search,
-        cancelToken
+        cancelToken,
+        _v,
     }) {
         let q = this.entityService.query(AccessToken);
         if(search) {
@@ -69,6 +80,7 @@ export default class AccessTokenListPage extends ContentPage {
 
     @Action({ onEvent: "add-item"})
     async addItem() {
-        
+        await PageNavigator.pushPageForResult(AccessTokenEditorPage);
+        this.version++;
     }
 }
