@@ -35,6 +35,15 @@ export default class AppDrawer extends Drawer {
                         commandLink={AppCommands.imports.displayRoute({})}
                         />
                 </ExpanderMenu>
+                 <ExpanderMenu isExpanded={true}>
+                    <MenuItem
+                        label="Settings"
+                        />
+                    <MenuItem
+                        label="Access Tokens"
+                        commandLink={AppCommands.accessTokens.displayRoute({})}
+                        />
+                </ExpanderMenu>
             </section>
         </div>;
         

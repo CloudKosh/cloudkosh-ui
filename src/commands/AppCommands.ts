@@ -8,6 +8,11 @@ export default class AppCommands extends Commands {
         openPage: () => import("../pages/home/HomePage.js")
     });
 
+    static accessTokens = Command.create({
+        route: "/access-tokens",
+        openPage: () => import("../pages/settings/access-tokens/AccessTokenListPage.js")
+    })
+
     static buckets = Command.create({
         route: "/ns/{ns}",
         openPage: () => import("../pages/buckets/list/BucketList.js")

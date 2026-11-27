@@ -7,6 +7,8 @@ import { Inject } from "@web-atoms/core/dist/di/Inject.js";
 import EntityService from "../../../core/EntityService.js";
 import { Sql } from "../../../core/Sql.js";
 import Bind from "@web-atoms/core/dist/core/Bind.js";
+import { AddIconTextButton } from "../../../core/controls/buttons/IconButton.js";
+import Action from "@web-atoms/core/dist/view-model/Action.js";
 
 export default class AccessTokenListPage extends ContentPage {
 
@@ -43,6 +45,13 @@ export default class AccessTokenListPage extends ContentPage {
                 </div>}
                 />
         </div>;
+
+        this.footerRenderer = () => <footer>
+            <AddIconTextButton
+                text="Add New Access Token"
+                data-click-event="add-item"
+                />
+        </footer>
     }
 
     loadItems({
@@ -58,4 +67,8 @@ export default class AccessTokenListPage extends ContentPage {
         return q.toPage({ start, size: 25, cancelToken});
     }
 
+    @Action({ onEvent: "add-item"})
+    async addItem() {
+        
+    }
 }
