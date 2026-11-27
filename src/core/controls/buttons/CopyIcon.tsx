@@ -1,7 +1,5 @@
 /* eslint-disable no-console */
 import XNode from "@web-atoms/core/dist/core/XNode.js";
-import { NavigationService } from "@web-atoms/core/dist/services/NavigationService.js";
-import { AtomControl } from "@web-atoms/core/dist/web/controls/AtomControl.js";
 import PopupService from "@web-atoms/core/dist/web/services/PopupService.js";
 
 document.body.addEventListener("click", (e) => {
