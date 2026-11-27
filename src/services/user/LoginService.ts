@@ -17,7 +17,7 @@ export default class LoginService {
         if(this.user) {
             return this.user;
         }
-        const r = await FetchBuilder.get("/v1/api/login").asJson<IUserInfo>();
+        const r = await FetchBuilder.get("/api/user").asJson<IUserInfo>();
         if(r.userID) {
             this.user = r;
         }
